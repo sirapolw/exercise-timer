@@ -45,7 +45,11 @@ const Timer = () => {
         if (currentExerciseIndex < exercises.length - 1) {
           setCurrentExerciseIndex((prev) => prev + 1);
           setTimeLeft(exercises[currentExerciseIndex + 1].duration);
-          speak(exercises[currentExerciseIndex + 1].name);
+          speak(
+            `${exercises[currentExerciseIndex + 1].name} for ${
+              exercises[currentExerciseIndex + 1].duration
+            } seconds`
+          );
         } else {
           setIsRunning(false);
           alert("Workout Complete!");
