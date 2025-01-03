@@ -86,8 +86,8 @@ const Timer = () => {
       interval = setInterval(() => {
         if (timeLeft > 0) {
           setTimeLeft((prev) => prev - 1);
-          if (timeLeft <= 4 && timeLeft > 1) beepCountdown();
-          if (timeLeft === 1) beepEnd();
+          if (timeLeft <= 4 && timeLeft > 1) speak((timeLeft - 1).toString());
+          if (timeLeft === 1) speak("Next!");
         } else {
           clearInterval(interval!);
           if (currentExerciseIndex < exercises.length - 1) {
@@ -189,7 +189,7 @@ const Timer = () => {
   return (
     <div
       style={{
-        height: "100vh",
+        minHeight: "100vh",
         background: "#4287f5",
         textAlign: "center",
         paddingTop: "50px",
