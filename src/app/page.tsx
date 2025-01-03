@@ -119,11 +119,35 @@ const Timer = () => {
     audio.play();
   };
 
+  const skipForward = () => {
+    if (currentExerciseIndex < exercises.length - 1) {
+      const nextIndex = currentExerciseIndex + 1;
+      setCurrentExerciseIndex(nextIndex);
+      setTimeLeft(exercises[nextIndex].duration);
+      speakExercise(exercises[nextIndex]);
+      setStatus("exercising");
+    }
+  };
+
+  const skipBackward = () => {
+    if (currentExerciseIndex > 0) {
+      const prevIndex = currentExerciseIndex - 1;
+      setCurrentExerciseIndex(prevIndex);
+      setTimeLeft(exercises[prevIndex].duration);
+      speakExercise(exercises[prevIndex]);
+      setStatus("exercising");
+    }
+  };
+
   const getDisplayName = () => {
     if (status === "countdown") {
       return `Get ready in ${timeLeft}s`;
     } else if (status === "exercising") {
-      return exercises[currentExerciseIndex].name;
+      return exercises[currentExerciseIndex].reps
+        ? exercises[currentExerciseIndex].name +
+            " x " +
+            exercises[currentExerciseIndex].reps
+        : exercises[currentExerciseIndex].name;
     } else {
       return "Ready to Start";
     }
@@ -166,42 +190,129 @@ const Timer = () => {
       {(status === "countdown" || status === "exercising") && (
         <div
           style={{
-            position: "relative",
-            width: "350px",
-            height: "350px",
-            margin: "auto",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-            borderRadius: "50%",
-            backgroundColor: "#f9f9f9",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <ProgressCircle
-            timeLeft={timeLeft}
-            totalTime={
-              status === "countdown"
-                ? 5
-                : exercises[currentExerciseIndex].duration
-            }
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              textAlign: "center",
-            }}
-          >
-            <div
+          {status === "exercising" && (
+            <button
+              disabled={
+                !(status === "exercising" && currentExerciseIndex !== 0)
+              }
+              onClick={skipBackward}
               style={{
-                fontSize: "5em",
-                fontWeight: "bold",
-                color: "#4CAF50",
+                width: "150px",
+                padding: "10px 20px",
+                fontSize: "1em",
+                cursor: !(status === "exercising" && currentExerciseIndex !== 0)
+                  ? "not-allowed"
+                  : "pointer",
+                backgroundColor: !(
+                  status === "exercising" && currentExerciseIndex !== 0
+                )
+                  ? "#e0e0e0"
+                  : "#f44336",
+                color: !(status === "exercising" && currentExerciseIndex !== 0)
+                  ? "#9e9e9e"
+                  : "white",
+                border: "none",
+                borderRadius: "8px",
+                boxShadow: !(
+                  status === "exercising" && currentExerciseIndex !== 0
+                )
+                  ? "none"
+                  : "0px 4px 6px rgba(0, 0, 0, 0.1)",
               }}
             >
-              {timeLeft}s
+              Backward
+            </button>
+          )}
+
+          <div
+            style={{
+              position: "relative",
+              width: "350px",
+              height: "350px",
+              margin: "30px",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+              borderRadius: "50%",
+              backgroundColor: "#f9f9f9",
+            }}
+          >
+            <ProgressCircle
+              timeLeft={timeLeft}
+              totalTime={
+                status === "countdown"
+                  ? 5
+                  : exercises[currentExerciseIndex].duration
+              }
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "5em",
+                  fontWeight: "bold",
+                  color: "#4CAF50",
+                }}
+              >
+                {timeLeft}s
+              </div>
             </div>
           </div>
+
+          {status === "exercising" && (
+            <button
+              disabled={
+                !(
+                  status === "exercising" &&
+                  currentExerciseIndex !== exercises.length - 1
+                )
+              }
+              onClick={skipForward}
+              style={{
+                width: "150px",
+                padding: "10px 20px",
+                fontSize: "1em",
+                cursor: !(
+                  status === "exercising" &&
+                  currentExerciseIndex !== exercises.length - 1
+                )
+                  ? "not-allowed"
+                  : "pointer",
+                backgroundColor: !(
+                  status === "exercising" &&
+                  currentExerciseIndex !== exercises.length - 1
+                )
+                  ? "#e0e0e0"
+                  : "#4CAF50",
+                color: !(
+                  status === "exercising" &&
+                  currentExerciseIndex !== exercises.length - 1
+                )
+                  ? "#9e9e9e"
+                  : "white",
+                border: "none",
+                borderRadius: "8px",
+                boxShadow: !(
+                  status === "exercising" &&
+                  currentExerciseIndex !== exercises.length - 1
+                )
+                  ? "none"
+                  : "0px 4px 6px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              Skip Forward
+            </button>
+          )}
         </div>
       )}
       {status === "exercising" && (
@@ -236,40 +347,44 @@ const Timer = () => {
         )}
         {(status === "countdown" || status === "exercising") && (
           <>
-            <button
-              onClick={startTimer}
-              style={{
-                padding: "15px 30px",
-                fontSize: "1.2em",
-                marginRight: "15px",
-                cursor: "pointer",
-                backgroundColor: "#4CAF50",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-              }}
-              disabled={isRunning}
-            >
-              {isRunning ? "Running" : "Resume"}
-            </button>
-            <button
-              onClick={pauseTimer}
-              style={{
-                padding: "15px 30px",
-                fontSize: "1.2em",
-                marginRight: "15px",
-                cursor: "pointer",
-                backgroundColor: "#f44336",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-              }}
-              disabled={!isRunning}
-            >
-              Pause
-            </button>
+            {!isRunning && (
+              <button
+                onClick={startTimer}
+                style={{
+                  padding: "15px 30px",
+                  fontSize: "1.2em",
+                  marginRight: "15px",
+                  cursor: "pointer",
+                  backgroundColor: "#4CAF50",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                }}
+                disabled={isRunning}
+              >
+                {"Resume"}
+              </button>
+            )}
+            {isRunning && (
+              <button
+                onClick={pauseTimer}
+                style={{
+                  padding: "15px 30px",
+                  fontSize: "1.2em",
+                  marginRight: "15px",
+                  cursor: "pointer",
+                  backgroundColor: "#f44336",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                }}
+                disabled={!isRunning}
+              >
+                Pause
+              </button>
+            )}
             <button
               onClick={resetTimer}
               style={{
@@ -283,7 +398,7 @@ const Timer = () => {
                 boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
               }}
             >
-              Reset Timer
+              Exit Exercise
             </button>
           </>
         )}
