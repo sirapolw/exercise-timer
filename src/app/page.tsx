@@ -1,8 +1,8 @@
 "use client";
+import ProgressCircle from "@/components/progress-circle";
 import { useState, useEffect } from "react";
 
 const exercises = [
-  { name: "Starting soon", duration: 5 },
   { name: "Plank", duration: 20 },
   { name: "Right Leg Raise", duration: 10 },
   { name: "Left Leg Raise", duration: 10 },
@@ -83,21 +83,17 @@ const Timer = () => {
     speechSynthesis.speak(utterance);
   };
 
-  const progress = (timeLeft / exercises[currentExerciseIndex].duration) * 100;
-
-  const circleRadius = 120;
-  const circumference = 2 * Math.PI * circleRadius;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
-
   return (
     <div
       style={{
+        height: "100vh",
+        background: "#4287f5",
         textAlign: "center",
         marginTop: "50px",
         fontFamily: "'Roboto', sans-serif",
       }}
     >
-      <h1 style={{ fontSize: "3em", marginBottom: "30px", color: "#333" }}>
+      <h1 style={{ fontSize: "3em", marginBottom: "30px", color: "#fff" }}>
         Exercise Timer
       </h1>
       <h2
@@ -121,31 +117,10 @@ const Timer = () => {
           backgroundColor: "#f9f9f9",
         }}
       >
-        <svg width="350" height="350">
-          <circle
-            cx="175"
-            cy="175"
-            r="150"
-            fill="none"
-            stroke="#e0e0e0"
-            strokeWidth="12"
-          />
-          <circle
-            cx="175"
-            cy="175"
-            r="150"
-            fill="none"
-            stroke="#4CAF50"
-            strokeWidth="12"
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            style={{
-              transition: "stroke-dashoffset 0.3s linear",
-              transform: "rotate(-90deg)",
-              transformOrigin: "center",
-            }}
-          />
-        </svg>
+        <ProgressCircle
+          timeLeft={timeLeft}
+          totalTime={exercises[currentExerciseIndex].duration}
+        />
         <div
           style={{
             position: "absolute",
