@@ -11,22 +11,22 @@ const exercises: Exercise[] = [
   { name: "Push up hold", duration: 10 },
   { name: "Shoulder taps", duration: 15, reps: 10 },
 
-  { name: "Rest", duration: 20 },
+  { name: "Rest", duration: 15 },
 
-  { name: "Birddog (right arm, left leg)", duration: 15, reps: 10 },
-  { name: "Birddog (left arm, right leg)", duration: 15, reps: 10 },
+  { name: "Birddog (right arm, left leg)", duration: 20, reps: 10 },
+  { name: "Birddog (left arm, right leg)", duration: 20, reps: 10 },
   { name: "Plank", duration: 20 },
   { name: "Push up hold", duration: 10 },
   { name: "Shoulder taps", duration: 15, reps: 10 },
 
-  { name: "Rest", duration: 20 },
+  { name: "Rest", duration: 15 },
 
   { name: "Left side plank", duration: 15 },
   { name: "Right side plank", duration: 15 },
   { name: "Left side plank side kick", duration: 15, reps: 10 },
   { name: "Right side plank side kick", duration: 15, reps: 10 },
 
-  { name: "Rest", duration: 20 },
+  { name: "Rest", duration: 15 },
 
   { name: "Left side plank", duration: 15 },
   { name: "Right side plank", duration: 15 },
@@ -34,6 +34,28 @@ const exercises: Exercise[] = [
   { name: "Right side plank rotation", duration: 15, reps: 10 },
 
   { name: "Rest", duration: 60 },
+
+  {
+    name: "Knee push up to renegade row (15 each side)",
+    duration: 120,
+    reps: 30,
+  }, // (15 left, 15 right)
+  { name: "Weight crunch", duration: 40, reps: 20 },
+  { name: "Russian twist", duration: 20 },
+  { name: "Mountain climbers", duration: 30 },
+  { name: "Bent knee hip raise", duration: 40, reps: 20 },
+
+  { name: "Rest", duration: 120 },
+
+  {
+    name: "Knee push up to renegade row (15 each side)",
+    duration: 120,
+    reps: 30,
+  }, // (15 left, 15 right)
+  { name: "Weight crunch", duration: 40, reps: 20 },
+  { name: "Russian twist", duration: 20 },
+  { name: "Mountain climbers", duration: 30 },
+  { name: "Bent knee hip raise", duration: 40, reps: 20 },
 ];
 
 const Timer = () => {
@@ -326,6 +348,57 @@ const Timer = () => {
         >
           Next: {getNextExerciseName()}
         </h3>
+      )}
+      {status === "exercising" && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: "20px",
+            padding: "0 20px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              height: "50px",
+              borderRadius: "10px",
+              backgroundColor: "#e0e0e0",
+              overflow: "scroll",
+              position: "relative",
+            }}
+          >
+            {exercises.map((exercise, index) => (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%",
+                  fontSize: "8px",
+                  flex: 1,
+                  backgroundColor:
+                    index === currentExerciseIndex
+                      ? "#4CAF50"
+                      : index < currentExerciseIndex
+                      ? "#8BC34A"
+                      : "#e0e0e0",
+                  borderRight:
+                    index !== exercises.length - 1
+                      ? "1px solid #ffffff"
+                      : "none",
+                }}
+                title={exercise.name}
+              >
+                {exercise.name}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
       <div style={{ marginTop: "30px" }}>
         {status === "idle" && (
