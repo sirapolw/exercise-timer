@@ -1,29 +1,38 @@
 "use client";
 import ProgressCircle from "@/components/progress-circle";
 import { useState, useEffect } from "react";
+import { Exercise } from "./types";
+import { speakExercise } from "@/utils/speak-utils";
 
-const exercises = [
+const exercises: Exercise[] = [
   { name: "Plank", duration: 20 },
-  { name: "Right Leg Raise", duration: 10 },
-  { name: "Left Leg Raise", duration: 10 },
-  { name: "Push-Up Hold", duration: 10 },
-  { name: "Shoulder Taps", duration: 10 },
+  { name: "Right leg lift", duration: 10 },
+  { name: "Left leg lift", duration: 10 },
+  { name: "Push up hold", duration: 10 },
+  { name: "Shoulder taps", duration: 15, reps: 10 },
+
   { name: "Rest", duration: 20 },
-  { name: "Birddog (Right Arm, Left Leg)", duration: 20 },
-  { name: "Birddog (Left Arm, Right Leg)", duration: 20 },
+
+  { name: "Birddog (right arm, left leg)", duration: 15, reps: 10 },
+  { name: "Birddog (left arm, right leg)", duration: 15, reps: 10 },
   { name: "Plank", duration: 20 },
-  { name: "Push-Up Hold", duration: 10 },
-  { name: "Shoulder Taps", duration: 10 },
+  { name: "Push up hold", duration: 10 },
+  { name: "Shoulder taps", duration: 15, reps: 10 },
+
   { name: "Rest", duration: 20 },
-  { name: "Left Side Plank", duration: 15 },
-  { name: "Right Side Plank", duration: 15 },
-  { name: "Left Side Plank Side Kick", duration: 10 },
-  { name: "Right Side Plank Side Kick", duration: 10 },
+
+  { name: "Left side plank", duration: 15 },
+  { name: "Right side plank", duration: 15 },
+  { name: "Left side plank side kick", duration: 15, reps: 10 },
+  { name: "Right side plank side kick", duration: 15, reps: 10 },
+
   { name: "Rest", duration: 20 },
-  { name: "Left Side Plank", duration: 15 },
-  { name: "Right Side Plank", duration: 15 },
-  { name: "Left Side Plank Rotation", duration: 10 },
-  { name: "Right Side Plank Rotation", duration: 10 },
+
+  { name: "Left side plank", duration: 15 },
+  { name: "Right side plank", duration: 15 },
+  { name: "Left side plank rotation", duration: 15, reps: 10 },
+  { name: "Right side plank rotation", duration: 15, reps: 10 },
+
   { name: "Rest", duration: 60 },
 ];
 
@@ -45,11 +54,7 @@ const Timer = () => {
         if (currentExerciseIndex < exercises.length - 1) {
           setCurrentExerciseIndex((prev) => prev + 1);
           setTimeLeft(exercises[currentExerciseIndex + 1].duration);
-          speak(
-            `${exercises[currentExerciseIndex + 1].name} for ${
-              exercises[currentExerciseIndex + 1].duration
-            } seconds`
-          );
+          speakExercise(exercises[currentExerciseIndex + 1]);
         } else {
           setIsRunning(false);
           alert("Workout Complete!");
@@ -76,11 +81,6 @@ const Timer = () => {
   const beepEnd = () => {
     const audio = new Audio("sounds/beep-1.mp3");
     audio.play();
-  };
-
-  const speak = (text: string) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    speechSynthesis.speak(utterance);
   };
 
   return (
