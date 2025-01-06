@@ -3,59 +3,12 @@ import ProgressCircle from "@/components/progress-circle";
 import { useState, useEffect } from "react";
 import { Exercise } from "./types";
 import { speak, speakExercise } from "@/utils/speak-utils";
+import { defaultSet } from "@/exercises/exercises";
 
 const exercises: Exercise[] = [
-  { name: "Plank", duration: 20 },
-  { name: "Right leg lift", duration: 10 },
-  { name: "Left leg lift", duration: 10 },
-  { name: "Push up hold", duration: 10 },
-  { name: "Shoulder taps", duration: 15, reps: 10 },
-
-  { name: "Rest", duration: 15 },
-
-  { name: "Birddog (right arm, left leg)", duration: 20, reps: 10 },
-  { name: "Birddog (left arm, right leg)", duration: 20, reps: 10 },
-  { name: "Plank", duration: 20 },
-  { name: "Push up hold", duration: 10 },
-  { name: "Shoulder taps", duration: 15, reps: 10 },
-
-  { name: "Rest", duration: 15 },
-
-  { name: "Left side plank", duration: 15 },
-  { name: "Right side plank", duration: 15 },
-  { name: "Left side plank side kick", duration: 15, reps: 10 },
-  { name: "Right side plank side kick", duration: 15, reps: 10 },
-
-  { name: "Rest", duration: 15 },
-
-  { name: "Left side plank", duration: 15 },
-  { name: "Right side plank", duration: 15 },
-  { name: "Left side plank rotation", duration: 15, reps: 10 },
-  { name: "Right side plank rotation", duration: 15, reps: 10 },
-
+  ...defaultSet,
   { name: "Rest", duration: 60 },
-
-  {
-    name: "Knee push up to renegade row (15 each side)",
-    duration: 120,
-    reps: 30,
-  }, // (15 left, 15 right)
-  { name: "Weight crunch", duration: 40, reps: 20 },
-  { name: "Russian twist", duration: 20 },
-  { name: "Mountain climbers", duration: 30 },
-  { name: "Bent knee hip raise", duration: 40, reps: 20 },
-
-  { name: "Rest", duration: 120 },
-
-  {
-    name: "Knee push up to renegade row (15 each side)",
-    duration: 120,
-    reps: 30,
-  }, // (15 left, 15 right)
-  { name: "Weight crunch", duration: 40, reps: 20 },
-  { name: "Russian twist", duration: 20 },
-  { name: "Mountain climbers", duration: 30 },
-  { name: "Bent knee hip raise", duration: 40, reps: 20 },
+  ...defaultSet,
 ];
 
 const Timer = () => {
