@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import ProgressCircle from "@/components/progress-circle";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { speak, speakExercise } from "@/utils/speak-utils";
 import { Exercise } from "../types";
 
@@ -62,6 +62,7 @@ const Timer = () => {
     return () => {
       if (interval) clearInterval(interval);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, isRunning, status, currentExerciseIndex]);
 
   const startTimer = async () => {
@@ -438,4 +439,10 @@ const Timer = () => {
   );
 };
 
-export default Timer;
+const TimerPage = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <Timer />
+  </Suspense>
+);
+
+export default TimerPage;
