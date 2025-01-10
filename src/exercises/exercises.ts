@@ -35,7 +35,7 @@ export const defaultSet: Exercise[] = [
     name: "Knee push up to renegade row (15 each side)",
     duration: 120,
     reps: 30,
-  }, // (15 left, 15 right)
+  },
   { name: "Weight crunch", duration: 40, reps: 20 },
   { name: "Russian twist", duration: 20 },
   { name: "Mountain climbers", duration: 30 },
