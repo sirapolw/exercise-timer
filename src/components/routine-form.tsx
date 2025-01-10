@@ -9,8 +9,12 @@ const exerciseSchema = z.object({
     .number({ invalid_type_error: "Duration must be a number" })
     .positive("Duration must be greater than 0"),
   reps: z
-    .number({ invalid_type_error: "Reps must be a number" })
-    .positive("Reps must be greater than 0")
+    .union([
+      z.nan(),
+      z.null(),
+      z.string(),
+      z.number({ invalid_type_error: "Reps must be a number" }),
+    ])
     .optional()
     .nullable()
     .default(null),
@@ -97,7 +101,7 @@ const RoutineForm = ({
             }}
           >
             {/* Exercise Name */}
-            <div>
+            <div className="flex-[2]">
               <input
                 {...register(`exercises.${index}.name` as const)}
                 placeholder="Exercise name"
@@ -111,7 +115,7 @@ const RoutineForm = ({
             </div>
 
             {/* Duration */}
-            <div>
+            <div className="flex-1">
               <input
                 type="number"
                 {...register(`exercises.${index}.duration` as const, {
@@ -128,7 +132,7 @@ const RoutineForm = ({
             </div>
 
             {/* Reps */}
-            <div>
+            <div className="flex-1">
               <input
                 type="number"
                 {...register(`exercises.${index}.reps` as const, {
