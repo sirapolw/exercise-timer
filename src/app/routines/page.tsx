@@ -1,13 +1,81 @@
 "use client";
 
-import {
-  addRoutine,
-  deleteRoutine,
-  fetchRoutines,
-  updateRoutine,
-} from "@/client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Exercise, Routine } from "../types";
+
+const HARDCODED_EXERCISES = [
+  { name: "Plank", duration: 30 },
+  { name: "Right leg lift", duration: 15 },
+  { name: "Left leg lift", duration: 15 },
+  { name: "Push up hold", duration: 15 },
+  { name: "Shoulder taps", reps: 15, duration: 25 },
+  { name: "Rest", duration: 10 },
+  { name: "Birddog (right arm, left leg)", duration: 15 },
+  { name: "Birddog (left arm, right leg)", duration: 15 },
+  { name: "Plank", duration: 30 },
+  { name: "Push up hold", duration: 15 },
+  { name: "Shoulder taps", reps: 15, duration: 25 },
+  { name: "Rest", duration: 10 },
+  { name: "Left side plank", duration: 25 },
+  { name: "Right side plank", duration: 25 },
+  { name: "Left side plank side kick", reps: 15, duration: 25 },
+  { name: "Right side plank side kick", reps: 15, duration: 25 },
+  { name: "Rest", duration: 15 },
+  { name: "Left side plank", duration: 25 },
+  { name: "Right side plank", duration: 25 },
+  { name: "Left side plank rotation", reps: 15, duration: 25 },
+  { name: "Right side plank rotation", reps: 15, duration: 25 },
+  { name: "Rest", duration: 60 },
+  {
+    name: "Knee push up to renegade row (15 each side)",
+    reps: 30,
+    duration: 120,
+  },
+  { name: "Weight crunch", reps: 20, duration: 40 },
+  { name: "Russian twist", duration: 20 },
+  { name: "Mountain climbers", duration: 30 },
+  { name: "Bent knee hip raise", reps: 20, duration: 40 },
+  { name: "Rest", duration: 60 },
+  { name: "Plank", duration: 30 },
+  { name: "Right leg lift", duration: 15 },
+  { name: "Left leg lift", duration: 15 },
+  { name: "Push up hold", duration: 15 },
+  { name: "Shoulder taps", duration: 25, reps: 15 },
+  { name: "Rest", duration: 10 },
+  { name: "Birddog (right arm, left leg)", duration: 15 },
+  { name: "Birddog (left arm, right leg)", duration: 15 },
+  { name: "Plank", duration: 30 },
+  { name: "Push up hold", duration: 15 },
+  { name: "Shoulder taps", duration: 25, reps: 15 },
+  { name: "Rest", duration: 10 },
+  { name: "Left side plank", duration: 25 },
+  { name: "Right side plank", duration: 25 },
+  { name: "Left side plank side kick", duration: 25, reps: 15 },
+  { name: "Right side plank side kick", duration: 25, reps: 15 },
+  { name: "Rest", duration: 15 },
+  { name: "Left side plank", duration: 25 },
+  { name: "Right side plank", duration: 25 },
+  { name: "Left side plank rotation", duration: 25, reps: 15 },
+  { name: "Right side plank rotation", duration: 25, reps: 15 },
+  { name: "Rest", duration: 60 },
+  {
+    name: "Knee push up to renegade row (15 each side)",
+    duration: 120,
+    reps: 30,
+  },
+  { name: "Weight crunch", duration: 40, reps: 20 },
+  { name: "Russian twist", duration: 20 },
+  { name: "Mountain climbers", duration: 30 },
+  { name: "Bent knee hip raise", duration: 40, reps: 20 },
+];
+
+const HARDCODED_ROUTINES = [
+  {
+    id: 1,
+    name: "Bank Trainer v3",
+    exercises: HARDCODED_EXERCISES,
+  },
+];
 
 const ManageRoutines = () => {
   const [selectedRoutine, setSelectedRoutine] = useState<Routine | null>(null);
@@ -15,19 +83,7 @@ const ManageRoutines = () => {
   const [routineName, setRoutineName] = useState("");
   const [exercises, setExercises] = useState<Exercise[]>([]);
 
-  const [routines, setRoutines] = useState<Routine[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data, error } = await fetchRoutines();
-      if (error) {
-        console.error("Error fetching routines:", error.message);
-      } else {
-        setRoutines(data || []);
-      }
-    };
-    fetchData();
-  }, []);
+  const [routines, setRoutines] = useState<Routine[]>(HARDCODED_ROUTINES);
 
   const handleSaveRoutine = async () => {
     if (!routineName || exercises.length === 0) {
@@ -38,30 +94,25 @@ const ManageRoutines = () => {
     const routine: Routine = { name: routineName, exercises };
 
     if (isEditing && selectedRoutine) {
-      // Update routine
-      const { error } = await updateRoutine(selectedRoutine.id, routine);
-      if (error) {
-        console.error("Error updating routine:", error.message);
-      } else {
-        alert("Routine updated successfully!");
-        setIsEditing(false);
-        setSelectedRoutine(null);
-      }
+      // Update routine in local state
+      setRoutines((prev) =>
+        prev.map((r) =>
+          r.id === selectedRoutine.id
+            ? { ...routine, id: selectedRoutine.id }
+            : r
+        )
+      );
+      alert("Routine updated successfully!");
+      setIsEditing(false);
+      setSelectedRoutine(null);
     } else {
-      // Create routine
-      const { error } = await addRoutine(routine);
-      const { data } = await fetchRoutines();
-      setRoutines(data || []);
-      if (error) {
-        console.error("Error saving routine:", error.message);
-      } else {
-        alert("Routine created successfully!");
-      }
+      // Add routine to local state
+      setRoutines((prev) => [...prev, { ...routine, id: Date.now() }]);
+      alert("Routine created successfully!");
     }
 
     setRoutineName("");
     setExercises([]);
-    fetchRoutines();
   };
 
   const handleEditRoutine = (routine: Routine) => {
@@ -73,14 +124,8 @@ const ManageRoutines = () => {
 
   const handleDeleteRoutine = async (id: number) => {
     if (confirm("Are you sure you want to delete this routine?")) {
-      const { error } = await deleteRoutine(id);
-
-      if (error) {
-        console.error("Error deleting routine:", error.message);
-      } else {
-        alert("Routine deleted successfully!");
-        fetchRoutines();
-      }
+      setRoutines((prev) => prev.filter((r) => r.id !== id));
+      alert("Routine deleted successfully!");
     }
   };
 

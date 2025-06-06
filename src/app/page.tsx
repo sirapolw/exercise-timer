@@ -1,37 +1,27 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
-import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Routine } from "./types";
-import { fetchRoutines } from "@/client";
+import { HARDCODED_ROUTINES } from "../exercises/hardcodedRoutines";
 
 const LandingPage = () => {
-  const [routines, setRoutines] = useState<Routine[]>([]);
+  const [routines] = useState<Routine[]>(HARDCODED_ROUTINES);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data, error } = await fetchRoutines();
-      if (error) {
-        console.error("Error fetching routines:", error.message);
-      } else {
-        setRoutines(data || []);
-      }
-    };
-    fetchData();
-  }, []);
-
   const handleStartRoutine = (routine: Routine) => {
-    router.push(`/timer?routine=${encodeURIComponent(JSON.stringify(routine.exercises))}`);
+    router.push(
+      `/timer?routine=${encodeURIComponent(JSON.stringify(routine.exercises))}`
+    );
   };
 
-  const handleEditRoutine = (routineId: number) => {
-    router.push(`/routines/${routineId}`);
-  };
+  // const handleEditRoutine = (routineId: number) => {
+  //   router.push(`/routines/${routineId}`);
+  // };
 
-  const handleAddRoutine = () => {
-    router.push("/routines/add");
-  };
+  // const handleAddRoutine = () => {
+  //   router.push("/routines/add");
+  // };
 
   return (
     <div
@@ -47,7 +37,7 @@ const LandingPage = () => {
         Routines
       </h1>
 
-      <button
+      {/* <button
         onClick={handleAddRoutine}
         style={{
           padding: "10px 20px",
@@ -61,7 +51,7 @@ const LandingPage = () => {
         }}
       >
         Add New Routine
-      </button>
+      </button> */}
 
       <ul style={{ listStyle: "none", padding: 0 }}>
         {routines.map((routine) => (
@@ -96,7 +86,7 @@ const LandingPage = () => {
               >
                 Start
               </button>
-              <button
+              {/* <button
                 onClick={() => handleEditRoutine(routine.id!)}
                 style={{
                   padding: "5px 10px",
@@ -108,7 +98,7 @@ const LandingPage = () => {
                 }}
               >
                 Edit
-              </button>
+              </button> */}
             </div>
           </li>
         ))}
